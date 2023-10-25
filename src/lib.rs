@@ -1,2 +1,2 @@
 mod pie;
-pub use pie::Java_pers_metaworm_RustJNI_init;
+pub use pie::Java_top_magicpotato_RustJNI_init;

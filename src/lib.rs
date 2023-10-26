@@ -1,2 +1,2 @@
-mod pie;
-pub use pie::Java_top_magicpotato_RustJNI_init;
+mod echarts_jni;
+pub use echarts_jni::Java_top_magicpotato_Echarts_save;

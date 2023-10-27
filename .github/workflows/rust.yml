@@ -19,7 +19,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: linux-artifact
-        path: target/release/charming2jni*
+        path: target/release/*.dll
 
   build-windows:
     runs-on: windows-latest
@@ -30,4 +30,4 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: windows-artifact
-        path: target/release/charming2jni*
+        path: target/release/*.so

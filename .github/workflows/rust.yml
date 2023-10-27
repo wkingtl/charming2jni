@@ -10,15 +10,24 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  build-linux:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4.1.1
     - name: Build
       run: cargo build --release -v
     - uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
+        name: linux-artifact
         path: target/release/*.so
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4.1.1
+    - name: Build
+      run: cargo build --release -v
+    - uses: actions/upload-artifact@v3
+      with:
+        name: windows-artifact
+        path: target/release/*.dll

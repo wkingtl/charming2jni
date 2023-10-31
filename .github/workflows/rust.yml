@@ -31,3 +31,14 @@ jobs:
       with:
         name: windows-artifact
         path: target/release/*.dll
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: Build
+        run: cargo build --release -v
+      - uses: actions/upload-artifact@v3
+        with:
+          name: macos-artifact
+          path: target/release/*.dylib

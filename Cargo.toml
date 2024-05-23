@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ['cdylib']
 
 [dependencies]
-# 这里使用的是gitee的地址，但这个项目的更新是通过github进行然后再用gitee通过过来。这么做目的是直接用github拉取经常会失败
+# charming针对原始的charming项目进行一些定制
 charming = { path = "lib/charming", features = ["ssr"] }
 jni = "0.21.1"
 #serde = { version = "1.0", features = ["derive"] }

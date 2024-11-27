@@ -2,6 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/charming.svg)](https://crates.io/crates/charming)
 [![docs.rs](https://docs.rs/charming/badge.svg)](https://docs.rs/charming)
+[![discord](https://dcbadge.vercel.app/api/server/u3wmVPcW?style=flat)](https://discord.gg/u3wmVPcW)
 
 Charming is a powerful and versatile chart rendering library for Rust that leverages the power of [Apache ECharts](https://echarts.apache.org/en/index.html) to deliver high-quality data visualizations. Built with the Rust programming language, this library aims to provide the Rust ecosystem with an intuitive and effective way to generate and visualize charts, using a declarative and user-friendly API.
 
@@ -21,9 +22,9 @@ Highlights:
         <td><img src="./img/theme/vintage.png" alt="Vintage" /><p align="center">Vintage</p></td>
     </tr>
     <tr>
-        <td><img src="./img/theme/westeros.png" alt="Westeros" /><p align="center">Vintage</p></td>
+        <td><img src="./img/theme/westeros.png" alt="Westeros" /><p align="center">Westeros</p></td>
         <td><img src="./img/theme/essos.png" alt="Essos" /><p align="center">Essos</p></td>
-        <td><img src="./img/theme/wonderland.png" alt="Wonderland" /><p align="center">Essos</p></td>
+        <td><img src="./img/theme/wonderland.png" alt="Wonderland" /><p align="center">Wonderland</p></td>
     </tr>
     <tr>
         <td><img src="./img/theme/walden.png" alt="Walden" /><p align="center">Walden</p></td>
@@ -133,11 +134,11 @@ let mut renderer = ImageRenderer::new(1000, 800);
 // Render the chart as SVG string.
 renderer.render(&chart).unwrap();
 // Render the chart as PNG bytes.
-renderer.render_format(ImageFormat::PNG, &chart).unwrap();
+renderer.render_format(ImageFormat::Png, &chart).unwrap();
 // Save the chart as SVG file.
 renderer.save(&chart, "/tmp/chart.svg").unwrap();
 // Save the chart as PNG file.
-renderer.save_format(ImageFormat::PNG, &chart, "/tmp/chart.png");
+renderer.save_format(ImageFormat::Png, &chart, "/tmp/chart.png");
 
 
 // Use WasmRenderer. The `wasm` feature needs to be enabled.
@@ -286,7 +287,7 @@ You can also clone the repo and run `cargo run --bin gallery` to view the intera
 <a href="./gallery/src/scatter/basic_scatter.rs"><img src="./img/scatter/basic_scatter.svg" width="40%" alt="Basic Scatter" /></a>
 <a href="./gallery/src/scatter/bubble_chart.rs"><img src="./img/scatter/bubble_chart.svg" width="40%" alt="Bubble Chart" /></a>
 <a href="./gallery/src/scatter/effect_scatter.rs"><img src="./img/scatter/effect_scatter.svg" width="40%" alt="Effect Scatter" /></a>
-<a href="./gallery/src/scatter/punch_cart_of_github.rs"><img src="./img/scatter/punch_card_of_github.svg" width="40%" alt="Punch Card of Github" /></a>
+<a href="./gallery/src/scatter/punch_card_of_github.rs"><img src="./img/scatter/punch_card_of_github.svg" width="40%" alt="Punch Card of Github" /></a>
 </div>
 
 ### Sunburst Charts
@@ -306,4 +307,10 @@ You can also clone the repo and run `cargo run --bin gallery` to view the intera
 <div align="center">
 <a href="./gallery/src/tree/from_left_to_right_tree.rs"><img src="./img/tree/from_left_to_right_tree.svg" width="40%" alt="From Left to Right Tree" /></a>
 <a href="./gallery/src/tree/multiple_trees.rs"><img src="./img/tree/multiple_trees.svg" width="40%" alt="Multiple Trees" /></a>
+</div>
+
+### Custom Charts
+
+<div align="center">
+<a href="./gallery/src/candlestick/ohlc.rs"><img src="./img/candlestick/ohlc.svg" width="40%" alt="Custom Error Bar/Candle Stick" /></a>
 </div>

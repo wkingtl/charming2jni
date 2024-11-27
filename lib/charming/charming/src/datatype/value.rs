@@ -1,15 +1,27 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NumericValue {
-    Integer(i32),
+    Integer(i64),
     Float(f64),
 }
 
 impl From<i32> for NumericValue {
     fn from(n: i32) -> Self {
+        NumericValue::Integer(n as i64)
+    }
+}
+
+impl From<i64> for NumericValue {
+    fn from(n: i64) -> Self {
         NumericValue::Integer(n)
+    }
+}
+
+impl From<f32> for NumericValue {
+    fn from(n: f32) -> Self {
+        NumericValue::Float(n as f64)
     }
 }
 
@@ -23,6 +35,7 @@ impl From<f64> for NumericValue {
 #[serde(untagged)]
 pub enum CompositeValue {
     Number(NumericValue),
+    OptionalNumber(Option<NumericValue>),
     String(String),
     Array(Vec<CompositeValue>),
 }
@@ -33,6 +46,15 @@ where
 {
     fn from(n: N) -> Self {
         CompositeValue::Number(n.into())
+    }
+}
+
+impl<N> From<Option<N>> for CompositeValue
+where
+    N: Into<NumericValue>,
+{
+    fn from(n: Option<N>) -> Self {
+        CompositeValue::OptionalNumber(n.map(Into::into))
     }
 }
 

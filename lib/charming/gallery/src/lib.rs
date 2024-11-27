@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 use charming::Chart;
 use lazy_static::lazy_static;
 use std::collections::BTreeMap;
@@ -56,6 +58,7 @@ lazy_static! {
     };
     static ref BOXPLOT_CHARTS: BTreeMap<&'static str, fn() -> Chart> = {
         let mut m = BTreeMap::new();
+        insert!(m, boxplot, basic_boxplot);
         insert!(m, boxplot, boxplot_light_velocity);
         insert!(m, boxplot, boxplot_light_velocity2);
         insert!(m, boxplot, data_transform_simple_aggregate);
@@ -108,6 +111,7 @@ lazy_static! {
         insert!(m, line, area_pieces);
         insert!(m, line, basic_area);
         insert!(m, line, basic_line);
+        insert!(m, line, different_symbols);
         insert!(m, line, confidence_band);
         insert!(m, line, data_transform_filter);
         insert!(m, line, distribution_of_electricity);

@@ -39,31 +39,29 @@ use charming::{
     Chart, ImageRenderer
 };
 
-fn main() {
-    let chart = Chart::new()
-        .legend(Legend::new().top("bottom"))
-        .series(
-            Pie::new()
-                .name("Nightingale Chart")
-                .rose_type(PieRoseType::Radius)
-                .radius(vec!["50", "250"])
-                .center(vec!["50%", "50%"])
-                .item_style(ItemStyle::new().border_radius(8))
-                .data(vec![
-                    (40.0, "rose 1"),
-                    (38.0, "rose 2"),
-                    (32.0, "rose 3"),
-                    (30.0, "rose 4"),
-                    (28.0, "rose 5"),
-                    (26.0, "rose 6"),
-                    (22.0, "rose 7"),
-                    (18.0, "rose 8"),
-                ]),
-        );
+let chart = Chart::new()
+    .legend(Legend::new().top("bottom"))
+    .series(
+        Pie::new()
+            .name("Nightingale Chart")
+            .rose_type(PieRoseType::Radius)
+            .radius(vec!["50", "250"])
+            .center(vec!["50%", "50%"])
+            .item_style(ItemStyle::new().border_radius(8))
+            .data(vec![
+                (40.0, "rose 1"),
+                (38.0, "rose 2"),
+                (32.0, "rose 3"),
+                (30.0, "rose 4"),
+                (28.0, "rose 5"),
+                (26.0, "rose 6"),
+                (22.0, "rose 7"),
+                (18.0, "rose 8"),
+            ]),
+    );
 
-    let mut renderer = ImageRenderer::new(1000, 800);
-    renderer.save(&chart, "/tmp/nightingale.svg");
-}
+let mut renderer = ImageRenderer::new(1000, 800);
+renderer.save(&chart, "/tmp/nightingale.svg");
 ```
 
 ## Themes
@@ -102,8 +100,8 @@ use component::{
 use datatype::Dataset;
 use element::{process_raw_strings, AxisPointer, Color, MarkLine, Tooltip};
 use serde::Serialize;
+use serde_with::{formats::PreferOne, serde_as, OneOrMany};
 use series::Series;
-
 /**
 The chart representation.
 
@@ -238,7 +236,8 @@ mouse pointer.
 [`Toolbox`] is a feature toolbox that includes data view, save as image, data
 zoom, restore, and reset.
  */
-#[derive(Serialize)]
+#[serde_as]
+#[derive(Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Chart {
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -260,6 +259,7 @@ pub struct Chart {
     #[serde(rename = "grid3D")]
     grid3d: Vec<Grid3D>,
 
+    #[serde_as(as = "OneOrMany<_, PreferOne>")]
     #[serde(skip_serializing_if = "Vec::is_empty")]
     x_axis: Vec<Axis>,
 
@@ -267,6 +267,7 @@ pub struct Chart {
     #[serde(rename = "xAxis3D")]
     x_axis3d: Vec<Axis3D>,
 
+    #[serde_as(as = "OneOrMany<_, PreferOne>")]
     #[serde(skip_serializing_if = "Vec::is_empty")]
     y_axis: Vec<Axis>,
 
@@ -328,6 +329,12 @@ pub struct Chart {
 
     #[serde(skip_serializing)]
     geo_maps: Vec<GeoMap>,
+}
+
+impl Default for Chart {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Chart {
@@ -511,9 +518,13 @@ impl Chart {
     }
 }
 
-impl ToString for Chart {
-    fn to_string(&self) -> String {
-        process_raw_strings(serde_json::to_string_pretty(self).unwrap().as_str())
+impl std::fmt::Display for Chart {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            process_raw_strings(&serde_json::to_string_pretty(self).unwrap())
+        )
     }
 }
 
@@ -523,4 +534,16 @@ pub enum EchartsError {
     ImageRenderingError(String),
     JsRuntimeError(String),
     WasmError(String),
+}
+
+impl std::error::Error for EchartsError {}
+impl std::fmt::Display for EchartsError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::HtmlRenderingError(msg) => write!(f, "HTML rendering error: {}", msg),
+            Self::ImageRenderingError(msg) => write!(f, "Image rendering error: {}", msg),
+            Self::JsRuntimeError(msg) => write!(f, "JavaScript runtime error: {}", msg),
+            Self::WasmError(msg) => write!(f, "WebAssembly runtime error: {}", msg),
+        }
+    }
 }

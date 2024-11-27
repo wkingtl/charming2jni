@@ -2,9 +2,10 @@ use serde::{ser::SerializeSeq, Serialize};
 
 use crate::{
     datatype::CompositeValue,
-    element::{BoundaryGap, ColorBy, CoordinateSystem, Label},
+    element::{BoundaryGap, ColorBy, CoordinateSystem, Label, Tooltip},
 };
 
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 pub struct ThemeRiverData {
     date: CompositeValue,
     value: CompositeValue,
@@ -47,7 +48,7 @@ where
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ThemeRiver {
     #[serde(rename = "type")]
@@ -89,8 +90,17 @@ pub struct ThemeRiver {
     #[serde(skip_serializing_if = "Option::is_none")]
     label: Option<Label>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<ThemeRiverData>,
+}
+
+impl Default for ThemeRiver {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ThemeRiver {
@@ -109,6 +119,7 @@ impl ThemeRiver {
             coordinate_system: None,
             boundary_gap: None,
             label: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -170,6 +181,11 @@ impl ThemeRiver {
 
     pub fn label<L: Into<Label>>(mut self, label: L) -> Self {
         self.label = Some(label.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

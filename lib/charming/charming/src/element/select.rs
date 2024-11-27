@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::{item_style::ItemStyle, label::Label};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Select {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -13,6 +13,12 @@ pub struct Select {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     item_style: Option<ItemStyle>,
+}
+
+impl Default for Select {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Select {

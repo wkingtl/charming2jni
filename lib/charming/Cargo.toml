@@ -1,5 +1,3 @@
 [workspace]
-members = [
-  "charming",
-  "gallery",
-]
+resolver = "2"
+members = ["charming", "gallery"]

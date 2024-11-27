@@ -3,7 +3,7 @@ use serde::Serialize;
 use crate::element::{AxisLabel, AxisLine, AxisType, BoundaryGap, NameLocation, TextStyle};
 
 /// Radius axis in polar coordinate.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RadiusAxis {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -61,6 +61,9 @@ pub struct RadiusAxis {
     log_base: Option<f64>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    start_value: Option<f64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     axis_label: Option<AxisLabel>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -68,6 +71,12 @@ pub struct RadiusAxis {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<String>,
+}
+
+impl Default for RadiusAxis {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RadiusAxis {
@@ -91,6 +100,7 @@ impl RadiusAxis {
             max_interval: None,
             interval: None,
             log_base: None,
+            start_value: None,
             axis_label: None,
             axis_line: None,
             data: vec![],
@@ -184,6 +194,11 @@ impl RadiusAxis {
 
     pub fn log_base<F: Into<f64>>(mut self, log_base: F) -> Self {
         self.log_base = Some(log_base.into());
+        self
+    }
+
+    pub fn start_value<F: Into<f64>>(mut self, start_value: F) -> Self {
+        self.start_value = Some(start_value.into());
         self
     }
 

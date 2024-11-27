@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::line_style::LineStyle;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct MinorTick {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -16,6 +16,12 @@ pub struct MinorTick {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     line_style: Option<LineStyle>,
+}
+
+impl Default for MinorTick {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MinorTick {

@@ -5,7 +5,7 @@ use crate::{
     element::{AreaStyle, ColorBy, Emphasis, LineStyle, Symbol, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Radar {
     #[serde(rename = "type")]
@@ -49,6 +49,12 @@ pub struct Radar {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     emphasis: Option<Emphasis>,
+}
+
+impl Default for Radar {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Radar {

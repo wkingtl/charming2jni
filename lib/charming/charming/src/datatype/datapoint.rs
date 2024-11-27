@@ -6,7 +6,7 @@ use crate::element::ItemStyle;
 
 use super::CompositeValue;
 
-#[derive(Serialize)]
+#[derive(Serialize, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct DataPointItem {
     value: CompositeValue,
@@ -72,8 +72,9 @@ where
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(untagged)]
+#[allow(clippy::large_enum_variant)]
 pub enum DataPoint {
     Value(CompositeValue),
     Item(DataPointItem),
@@ -124,8 +125,8 @@ mod test {
         let q = DataPoint::Value(42.into());
         assert_eq!(p, q);
 
-        let p: DataPoint = (-3.14).into();
-        let q = DataPoint::Value((-3.14).into());
+        let p: DataPoint = (-std::f32::consts::PI).into();
+        let q = DataPoint::Value((-std::f32::consts::PI).into());
         assert_eq!(p, q);
 
         let p: DataPoint = "foo".into();
@@ -134,14 +135,14 @@ mod test {
 
         let p: DataPoint = vec![
             CompositeValue::from(42),
-            CompositeValue::from(-3.14),
+            CompositeValue::from(-std::f32::consts::PI),
             CompositeValue::from("foo"),
         ]
         .into();
         let q = DataPoint::Value(
             vec![
                 CompositeValue::from(42),
-                CompositeValue::from(-3.14),
+                CompositeValue::from(-std::f32::consts::PI),
                 CompositeValue::from("foo"),
             ]
             .into(),

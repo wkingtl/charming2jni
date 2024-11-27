@@ -1,8 +1,11 @@
 use serde::Serialize;
 
-use crate::element::{ColorBy, CoordinateSystem};
+use crate::{
+    datatype::{DataFrame, DataPoint},
+    element::{ColorBy, CoordinateSystem, ItemStyle, Tooltip},
+};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Boxplot {
     #[serde(rename = "type")]
@@ -28,6 +31,24 @@ pub struct Boxplot {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     dataset_index: Option<u64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    item_style: Option<ItemStyle>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    z: Option<usize>,
+
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    data: DataFrame,
+}
+
+impl Default for Boxplot {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Boxplot {
@@ -41,6 +62,10 @@ impl Boxplot {
             legend_hover_link: None,
             hover_animation: None,
             dataset_index: None,
+            tooltip: None,
+            data: vec![],
+            item_style: None,
+            z: None,
         }
     }
 
@@ -76,6 +101,26 @@ impl Boxplot {
 
     pub fn dataset_index(mut self, dataset_index: u64) -> Self {
         self.dataset_index = Some(dataset_index);
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
+        self
+    }
+
+    pub fn item_style<S: Into<ItemStyle>>(mut self, item_style: S) -> Self {
+        self.item_style = Some(item_style.into());
+        self
+    }
+
+    pub fn data<D: Into<DataPoint>>(mut self, data: Vec<D>) -> Self {
+        self.data = data.into_iter().map(|d| d.into()).collect();
+        self
+    }
+
+    pub fn z(mut self, z: usize) -> Self {
+        self.z = Some(z);
         self
     }
 }

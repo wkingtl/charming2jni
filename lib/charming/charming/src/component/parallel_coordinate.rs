@@ -8,7 +8,7 @@ use crate::{
     },
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ParallelAxisDefault {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -80,6 +80,12 @@ pub struct ParallelAxisDefault {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<String>,
+}
+
+impl Default for ParallelAxisDefault {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ParallelAxisDefault {
@@ -227,7 +233,7 @@ impl ParallelAxisDefault {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ParallelCoordinate {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -262,6 +268,12 @@ pub struct ParallelCoordinate {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     parallel_axis_default: Option<ParallelAxisDefault>,
+}
+
+impl Default for ParallelCoordinate {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ParallelCoordinate {

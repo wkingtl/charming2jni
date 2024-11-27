@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::{datatype::CompositeValue, element::Orient};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum SaveAsImageType {
     Png,
@@ -10,7 +10,7 @@ pub enum SaveAsImageType {
     Svg,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SaveAsImage {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -25,6 +25,12 @@ pub struct SaveAsImage {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     background_color: Option<String>,
+}
+
+impl Default for SaveAsImage {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl SaveAsImage {
@@ -58,7 +64,7 @@ impl SaveAsImage {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Restore {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -66,6 +72,12 @@ pub struct Restore {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     title: Option<String>,
+}
+
+impl Default for Restore {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Restore {
@@ -87,7 +99,7 @@ impl Restore {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct DataView {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -98,6 +110,12 @@ pub struct DataView {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     read_only: Option<bool>,
+}
+
+impl Default for DataView {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl DataView {
@@ -125,7 +143,7 @@ impl DataView {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum MagicTypeType {
     /// For line charts.
@@ -147,7 +165,7 @@ impl From<&str> for MagicTypeType {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct MagicType {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -155,6 +173,12 @@ pub struct MagicType {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     title: Option<String>,
+}
+
+impl Default for MagicType {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MagicType {
@@ -176,7 +200,7 @@ impl MagicType {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "camelCase")]
 pub enum BrushType {
     Rect,
@@ -187,11 +211,17 @@ pub enum BrushType {
     Clear,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Brush {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     type_: Vec<BrushType>,
+}
+
+impl Default for Brush {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Brush {
@@ -205,11 +235,17 @@ impl Brush {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ToolboxDataZoom {
     #[serde(skip_serializing_if = "Option::is_none")]
     y_axis_index: Option<CompositeValue>,
+}
+
+impl Default for ToolboxDataZoom {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ToolboxDataZoom {
@@ -223,7 +259,7 @@ impl ToolboxDataZoom {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Feature {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -243,6 +279,12 @@ pub struct Feature {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     brush: Option<Brush>,
+}
+
+impl Default for Feature {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Feature {
@@ -288,7 +330,7 @@ impl Feature {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Toolbox {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -311,6 +353,12 @@ pub struct Toolbox {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     bottom: Option<CompositeValue>,
+}
+
+impl Default for Toolbox {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Toolbox {

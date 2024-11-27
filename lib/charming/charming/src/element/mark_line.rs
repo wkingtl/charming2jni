@@ -4,7 +4,7 @@ use crate::datatype::CompositeValue;
 
 use super::{label::Label, line_style::LineStyle, symbol::Symbol};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum MarkLineDataType {
     Min,
@@ -25,7 +25,7 @@ impl From<&str> for MarkLineDataType {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct MarkLineData {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -55,6 +55,12 @@ pub struct MarkLineData {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     label: Option<Label>,
+}
+
+impl Default for MarkLineData {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MarkLineData {
@@ -124,6 +130,8 @@ impl From<(&str, &str)> for MarkLineData {
     }
 }
 
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
+#[allow(clippy::large_enum_variant)]
 pub enum MarkLineVariant {
     Simple(MarkLineData),
     StartToEnd(MarkLineData, MarkLineData),
@@ -143,7 +151,7 @@ impl Serialize for MarkLineVariant {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct MarkLine {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -161,8 +169,20 @@ pub struct MarkLine {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     symbol: Vec<Symbol>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    precision: Option<f64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    silent: Option<bool>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<MarkLineVariant>,
+}
+
+impl Default for MarkLine {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MarkLine {
@@ -173,6 +193,8 @@ impl MarkLine {
             zlevel: None,
             z: None,
             symbol: vec![],
+            precision: None,
+            silent: None,
             data: vec![],
         }
     }
@@ -199,6 +221,16 @@ impl MarkLine {
 
     pub fn symbol<S: Into<Symbol>>(mut self, symbol: Vec<S>) -> Self {
         self.symbol = symbol.into_iter().map(|s| s.into()).collect();
+        self
+    }
+
+    pub fn precision<F: Into<f64>>(mut self, precision: F) -> Self {
+        self.precision = Some(precision.into());
+        self
+    }
+
+    pub fn silent(mut self, silent: bool) -> Self {
+        self.silent = Some(silent);
         self
     }
 

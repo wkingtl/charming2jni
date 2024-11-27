@@ -1,8 +1,7 @@
-use serde::Serialize;
-
 use super::{border_type::BorderType, color::Color};
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ItemStyle {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -34,6 +33,12 @@ pub struct ItemStyle {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     shadow_offset_y: Option<f64>,
+}
+
+impl Default for ItemStyle {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ItemStyle {

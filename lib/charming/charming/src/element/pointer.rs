@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::{icon::Icon, item_style::ItemStyle};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Pointer {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -28,6 +28,12 @@ pub struct Pointer {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     item_style: Option<ItemStyle>,
+}
+
+impl Default for Pointer {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Pointer {

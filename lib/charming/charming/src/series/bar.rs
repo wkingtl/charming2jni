@@ -4,10 +4,12 @@ use serde::Serialize;
 
 use crate::{
     datatype::{DataFrame, DataPoint},
-    element::{BackgroundStyle, ColorBy, CoordinateSystem, Emphasis, ItemStyle, Label, MarkLine},
+    element::{
+        BackgroundStyle, ColorBy, CoordinateSystem, Emphasis, ItemStyle, Label, MarkLine, Tooltip,
+    },
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Bar {
     #[serde(rename = "type")]
@@ -67,8 +69,17 @@ pub struct Bar {
     #[serde(skip_serializing_if = "Option::is_none")]
     bar_width: Option<f64>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: DataFrame,
+}
+
+impl Default for Bar {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Bar {
@@ -93,6 +104,7 @@ impl Bar {
             mark_line: None,
             stack: None,
             bar_width: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -184,6 +196,11 @@ impl Bar {
 
     pub fn bar_width<F: Into<f64>>(mut self, bar_width: F) -> Self {
         self.bar_width = Some(bar_width.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

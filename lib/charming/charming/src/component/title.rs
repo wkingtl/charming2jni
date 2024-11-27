@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// Title component, including main title and subtitle.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Title {
     /// Component ID.
@@ -120,6 +120,12 @@ pub struct Title {
     /// Offset distance on the vertical direction of shadow.
     #[serde(skip_serializing_if = "Option::is_none")]
     shadow_offset_y: Option<f64>,
+}
+
+impl Default for Title {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Title {

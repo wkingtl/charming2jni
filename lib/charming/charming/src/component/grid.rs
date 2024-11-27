@@ -5,7 +5,7 @@ use crate::{
     element::{Color, Padding, TextStyle, Trigger},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GridTooltip {
     /// Whether to show the tooltip component.
@@ -52,6 +52,12 @@ pub struct GridTooltip {
     /// Extra CSS style for the tooltip's floating layer.
     #[serde(skip_serializing_if = "Option::is_none")]
     extra_css_text: Option<String>,
+}
+
+impl Default for GridTooltip {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GridTooltip {
@@ -127,7 +133,7 @@ impl GridTooltip {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Grid {
     /// Component ID.
@@ -205,6 +211,12 @@ pub struct Grid {
     /// Tooltip settings in the grid.
     #[serde(skip_serializing_if = "Option::is_none")]
     tooltip: Option<GridTooltip>,
+}
+
+impl Default for Grid {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Grid {

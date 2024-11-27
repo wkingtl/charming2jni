@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::element::{AxisPointer, Color, Formatter, Padding};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum TriggerOn {
     Mousemove,
@@ -13,7 +13,7 @@ pub enum TriggerOn {
 }
 
 /// Types of triggering.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum Trigger {
     Item,
@@ -21,7 +21,7 @@ pub enum Trigger {
     None,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Tooltip {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -35,6 +35,9 @@ pub struct Tooltip {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     formatter: Option<Formatter>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    value_formatter: Option<Formatter>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     position: Option<String>,
@@ -52,6 +55,12 @@ pub struct Tooltip {
     border_width: Option<f64>,
 }
 
+impl Default for Tooltip {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Tooltip {
     pub fn new() -> Self {
         Self {
@@ -59,6 +68,7 @@ impl Tooltip {
             trigger_on: None,
             axis_pointer: None,
             formatter: None,
+            value_formatter: None,
             position: None,
             padding: None,
             background_color: None,
@@ -84,6 +94,11 @@ impl Tooltip {
 
     pub fn formatter<F: Into<Formatter>>(mut self, formatter: F) -> Self {
         self.formatter = Some(formatter.into());
+        self
+    }
+
+    pub fn value_formatter<F: Into<Formatter>>(mut self, value_formatter: F) -> Self {
+        self.value_formatter = Some(value_formatter.into());
         self
     }
 

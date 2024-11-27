@@ -2,17 +2,17 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     datatype::CompositeValue,
-    element::{Blur, Emphasis, ItemStyle, Label, Select, Symbol},
+    element::{Blur, Emphasis, ItemStyle, Label, Select, Symbol, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum TreeLayout {
     Orthogonal,
     Radial,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 pub enum TreeOrient {
     #[serde(rename = "LR")]
     LeftRight,
@@ -24,18 +24,24 @@ pub enum TreeOrient {
     BottomTop,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum TreeEdgeShape {
     Curve,
     Polyline,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TreeLeaves {
     #[serde(skip_serializing_if = "Option::is_none")]
     label: Option<Label>,
+}
+
+impl Default for TreeLeaves {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl TreeLeaves {
@@ -49,7 +55,7 @@ impl TreeLeaves {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TreeNode {
     pub name: String,
@@ -65,7 +71,7 @@ pub struct TreeNode {
 }
 
 /// The tree diagram is mainly used to display the tree data structure.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Tree {
     #[serde(rename = "type")]
@@ -174,8 +180,17 @@ pub struct Tree {
     #[serde(skip_serializing_if = "Option::is_none")]
     leaves: Option<TreeLeaves>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<TreeNode>,
+}
+
+impl Default for Tree {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Tree {
@@ -215,6 +230,7 @@ impl Tree {
             animation_duration: None,
             animation_duration_update: None,
             leaves: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -381,6 +397,11 @@ impl Tree {
 
     pub fn leaves<T: Into<TreeLeaves>>(mut self, leaves: T) -> Self {
         self.leaves = Some(leaves.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

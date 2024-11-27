@@ -8,7 +8,7 @@ use crate::{
 /**
 A single decal pattern.
  */
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct DecalItem {
     /// The symbol type of the decal.
@@ -54,6 +54,12 @@ pub struct DecalItem {
     /// duplicated.
     #[serde(skip_serializing_if = "Option::is_none")]
     max_tile_height: Option<f64>,
+}
+
+impl Default for DecalItem {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl DecalItem {
@@ -126,7 +132,7 @@ impl DecalItem {
 /**
 Decal patterns to be applied to series data.
  */
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Decal {
     /// Whether to show decal patterns. If `decals` is not set, this option is
@@ -139,6 +145,12 @@ pub struct Decal {
     /// the array in order.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     decals: Vec<DecalItem>,
+}
+
+impl Default for Decal {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Decal {
@@ -190,7 +202,7 @@ Chart::new()
     .series(Bar::new().data(vec![140, 230, 120, 50, 30, 150, 120]));
 ```
  */
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Aria {
     /// Whether to enable WAI-ARIA.
@@ -208,6 +220,12 @@ pub struct Aria {
     /// than colors to help differentiate the data.
     #[serde(skip_serializing_if = "Option::is_none")]
     decal: Option<Decal>,
+}
+
+impl Default for Aria {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Aria {

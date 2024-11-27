@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::datatype::CompositeValue;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct DimensionEncode {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -19,6 +19,12 @@ pub struct DimensionEncode {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     tooltip: Vec<CompositeValue>,
+}
+
+impl Default for DimensionEncode {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl DimensionEncode {

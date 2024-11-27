@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::line_style::LineStyle;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SplitLine {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -16,6 +16,12 @@ pub struct SplitLine {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     length: Option<f64>,
+}
+
+impl Default for SplitLine {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl SplitLine {

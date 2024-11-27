@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ScaleLimit {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -8,6 +8,12 @@ pub struct ScaleLimit {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     max: Option<f64>,
+}
+
+impl Default for ScaleLimit {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ScaleLimit {

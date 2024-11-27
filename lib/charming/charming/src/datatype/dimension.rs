@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(untagged)]
 pub enum DimensionType {
     Number,
@@ -23,7 +23,7 @@ impl From<&str> for DimensionType {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Dimension {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -35,6 +35,12 @@ pub struct Dimension {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     display_name: Option<String>,
+}
+
+impl Default for Dimension {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Dimension {

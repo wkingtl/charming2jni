@@ -3,12 +3,13 @@ use serde::Serialize;
 use crate::{
     datatype::{DataFrame, DataPoint},
     element::{
+        font_settings::{FontFamily, FontStyle, FontWeight},
         Anchor, AxisLabel, AxisLine, AxisTick, Color, ColorBy, Formatter, ItemStyle, Pointer,
-        SplitLine,
+        SplitLine, Tooltip,
     },
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GaugeDetail {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -18,13 +19,13 @@ pub struct GaugeDetail {
     color: Option<Color>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_style: Option<String>,
+    font_style: Option<FontStyle>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_weight: Option<String>,
+    font_weight: Option<FontWeight>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_family: Option<String>,
+    font_family: Option<FontFamily>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     font_size: Option<f64>,
@@ -37,6 +38,12 @@ pub struct GaugeDetail {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     formatter: Option<Formatter>,
+}
+
+impl Default for GaugeDetail {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GaugeDetail {
@@ -64,17 +71,17 @@ impl GaugeDetail {
         self
     }
 
-    pub fn font_style<S: Into<String>>(mut self, font_style: S) -> Self {
+    pub fn font_style<F: Into<FontStyle>>(mut self, font_style: F) -> Self {
         self.font_style = Some(font_style.into());
         self
     }
 
-    pub fn font_weight<S: Into<String>>(mut self, font_weight: S) -> Self {
+    pub fn font_weight<F: Into<FontWeight>>(mut self, font_weight: F) -> Self {
         self.font_weight = Some(font_weight.into());
         self
     }
 
-    pub fn font_family<S: Into<String>>(mut self, font_family: S) -> Self {
+    pub fn font_family<F: Into<FontFamily>>(mut self, font_family: F) -> Self {
         self.font_family = Some(font_family.into());
         self
     }
@@ -100,7 +107,7 @@ impl GaugeDetail {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GaugeTitle {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -108,6 +115,12 @@ pub struct GaugeTitle {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     offset_center: Option<(String, String)>,
+}
+
+impl Default for GaugeTitle {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GaugeTitle {
@@ -129,7 +142,7 @@ impl GaugeTitle {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GaugeProgress {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -149,6 +162,12 @@ pub struct GaugeProgress {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     item_style: Option<ItemStyle>,
+}
+
+impl Default for GaugeProgress {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GaugeProgress {
@@ -194,7 +213,7 @@ impl GaugeProgress {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Gauge {
     #[serde(rename = "type")]
@@ -269,8 +288,17 @@ pub struct Gauge {
     #[serde(skip_serializing_if = "Option::is_none")]
     title: Option<GaugeTitle>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: DataFrame,
+}
+
+impl Default for Gauge {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Gauge {
@@ -300,6 +328,7 @@ impl Gauge {
             anchor: None,
             detail: None,
             title: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -416,6 +445,11 @@ impl Gauge {
 
     pub fn title<T: Into<GaugeTitle>>(mut self, title: T) -> Self {
         self.title = Some(title.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

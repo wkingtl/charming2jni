@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::{datatype::CompositeValue, element::Orient};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum Type {
     Value,
@@ -11,7 +11,7 @@ pub enum Type {
     Log,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SingleAxis {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -50,6 +50,15 @@ pub struct SingleAxis {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     max: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    start_value: Option<f64>,
+}
+
+impl Default for SingleAxis {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl SingleAxis {
@@ -67,6 +76,7 @@ impl SingleAxis {
             inverse: None,
             min: None,
             max: None,
+            start_value: None,
         }
     }
 
@@ -127,6 +137,11 @@ impl SingleAxis {
 
     pub fn max<S: Into<String>>(mut self, max: S) -> Self {
         self.max = Some(max.into());
+        self
+    }
+
+    pub fn start_value<F: Into<f64>>(mut self, start_value: F) -> Self {
+        self.start_value = Some(start_value.into());
         self
     }
 }

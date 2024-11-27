@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PictorialBar {
     #[serde(rename = "type")]
@@ -60,6 +60,12 @@ pub struct PictorialBar {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<DataFrame>,
+}
+
+impl Default for PictorialBar {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl PictorialBar {

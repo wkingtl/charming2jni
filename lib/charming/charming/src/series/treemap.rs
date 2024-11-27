@@ -2,10 +2,10 @@ use serde::Serialize;
 
 use crate::{
     datatype::CompositeValue,
-    element::{Emphasis, ItemStyle, Label},
+    element::{Emphasis, ItemStyle, Label, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Treemap {
     #[serde(rename = "type")]
@@ -49,6 +49,15 @@ pub struct Treemap {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     emphasis: Option<Emphasis>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+}
+
+impl Default for Treemap {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Treemap {
@@ -68,6 +77,7 @@ impl Treemap {
             label: None,
             item_style: None,
             emphasis: None,
+            tooltip: None,
         }
     }
 
@@ -133,6 +143,11 @@ impl Treemap {
 
     pub fn emphasis<E: Into<Emphasis>>(mut self, emphasis: E) -> Self {
         self.emphasis = Some(emphasis.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 }

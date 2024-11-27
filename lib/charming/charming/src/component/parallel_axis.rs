@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::element::{AxisType, NameLocation};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ParallelAxis {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -36,8 +36,17 @@ pub struct ParallelAxis {
     #[serde(skip_serializing_if = "Option::is_none")]
     min: Option<f64>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    start_value: Option<f64>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<String>,
+}
+
+impl Default for ParallelAxis {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ParallelAxis {
@@ -53,6 +62,7 @@ impl ParallelAxis {
             inverse: None,
             max: None,
             min: None,
+            start_value: None,
             data: vec![],
         }
     }
@@ -104,6 +114,11 @@ impl ParallelAxis {
 
     pub fn min<F: Into<f64>>(mut self, min: F) -> Self {
         self.min = Some(min.into());
+        self
+    }
+
+    pub fn start_value<F: Into<f64>>(mut self, start_value: F) -> Self {
+        self.start_value = Some(start_value.into());
         self
     }
 

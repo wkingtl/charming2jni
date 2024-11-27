@@ -3,12 +3,13 @@ use serde::Serialize;
 use crate::{
     datatype::CompositeValue,
     element::{
+        font_settings::{FontFamily, FontStyle, FontWeight},
         AxisLabel, AxisLine, AxisTick, Color, Formatter, Padding, Shape, SplitArea, SplitLine,
     },
 };
 
 /// Name options for radar indicators.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RadarAxisName {
     /// Whether to display the indicator's name.
@@ -23,13 +24,13 @@ pub struct RadarAxisName {
     color: Option<Color>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_style: Option<String>,
+    font_style: Option<FontStyle>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_weight: Option<String>,
+    font_weight: Option<FontWeight>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_family: Option<String>,
+    font_family: Option<FontFamily>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     font_size: Option<f64>,
@@ -104,6 +105,12 @@ pub struct RadarAxisName {
     overflow: Option<String>,
 }
 
+impl Default for RadarAxisName {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RadarAxisName {
     pub fn new() -> Self {
         Self {
@@ -155,17 +162,17 @@ impl RadarAxisName {
         self
     }
 
-    pub fn font_style<S: Into<String>>(mut self, font_style: S) -> Self {
+    pub fn font_style<F: Into<FontStyle>>(mut self, font_style: F) -> Self {
         self.font_style = Some(font_style.into());
         self
     }
 
-    pub fn font_weight<S: Into<String>>(mut self, font_weight: S) -> Self {
+    pub fn font_weight<F: Into<FontWeight>>(mut self, font_weight: F) -> Self {
         self.font_weight = Some(font_weight.into());
         self
     }
 
-    pub fn font_family<S: Into<String>>(mut self, font_family: S) -> Self {
+    pub fn font_family<F: Into<FontFamily>>(mut self, font_family: F) -> Self {
         self.font_family = Some(font_family.into());
         self
     }
@@ -291,7 +298,7 @@ impl RadarAxisName {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RadarIndicator {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -305,6 +312,12 @@ pub struct RadarIndicator {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     color: Option<Color>,
+}
+
+impl Default for RadarIndicator {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RadarIndicator {
@@ -360,7 +373,7 @@ impl From<(&str, i64, i64)> for RadarIndicator {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RadarCoordinate {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -415,6 +428,12 @@ pub struct RadarCoordinate {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     indicator: Vec<RadarIndicator>,
+}
+
+impl Default for RadarCoordinate {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RadarCoordinate {

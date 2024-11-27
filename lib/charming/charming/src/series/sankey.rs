@@ -2,10 +2,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     datatype::CompositeValue,
-    element::{Emphasis, Label, LineStyle, Orient},
+    element::{Emphasis, ItemStyle, Label, LineStyle, Orient, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum SankeyNodeAlign {
     Left,
@@ -13,7 +13,7 @@ pub enum SankeyNodeAlign {
     Justify,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SankeyNode {
     pub name: String,
@@ -23,6 +23,37 @@ pub struct SankeyNode {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub depth: Option<f64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub item_style: Option<ItemStyle>,
+}
+
+impl SankeyNode {
+    pub fn new<S>(name: S) -> Self
+    where
+        S: Into<String>,
+    {
+        Self {
+            name: name.into(),
+            value: None,
+            depth: None,
+            item_style: None,
+        }
+    }
+
+    pub fn value<V: Into<f64>>(mut self, value: V) -> Self {
+        self.value = Some(value.into());
+        self
+    }
+    pub fn depth<D: Into<f64>>(mut self, depth: D) -> Self {
+        self.depth = Some(depth.into());
+        self
+    }
+
+    pub fn item_style<S: Into<ItemStyle>>(mut self, item_style: S) -> Self {
+        self.item_style = Some(item_style.into());
+        self
+    }
 }
 
 impl<S> From<S> for SankeyNode
@@ -34,11 +65,12 @@ where
             name: name.into(),
             value: None,
             depth: None,
+            item_style: None,
         }
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SankeyLink {
     pub source: String,
@@ -60,7 +92,7 @@ where
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Sankey {
     #[serde(rename = "type")]
@@ -100,6 +132,9 @@ pub struct Sankey {
     emphasis: Option<Emphasis>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    layout_iterations: Option<u64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     orient: Option<Orient>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -114,8 +149,17 @@ pub struct Sankey {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     links: Vec<SankeyLink>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<SankeyNode>,
+}
+
+impl Default for Sankey {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Sankey {
@@ -133,11 +177,13 @@ impl Sankey {
             width: None,
             height: None,
             emphasis: None,
+            layout_iterations: None,
             orient: None,
             label: None,
             node_align: None,
             line_style: None,
             links: vec![],
+            tooltip: None,
             data: vec![],
         }
     }
@@ -197,6 +243,11 @@ impl Sankey {
         self
     }
 
+    pub fn layout_iterations<F: Into<u64>>(mut self, layout_iterations: F) -> Self {
+        self.layout_iterations = Some(layout_iterations.into());
+        self
+    }
+
     pub fn orient<O: Into<Orient>>(mut self, orient: O) -> Self {
         self.orient = Some(orient.into());
         self
@@ -214,6 +265,11 @@ impl Sankey {
 
     pub fn line_style<L: Into<LineStyle>>(mut self, line_style: L) -> Self {
         self.line_style = Some(line_style.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

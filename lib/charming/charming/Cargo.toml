@@ -1,26 +1,30 @@
 [package]
 name = "charming"
 description = "A visualization library for Rust"
-version = "0.2.5"
+version = "0.4.0"
 edition = "2021"
 authors = ["Yuankun Zhang <i@yuankun.me>"]
-homepage = "https://github.com/yuankunzhang/echarts-rs"
-documentation = "https://github.com/yuankunzhang/echarts-rs"
+repository = "https://github.com/yuankunzhang/charming"
+documentation = "https://github.com/yuankunzhang/charming"
 keywords = ["echarts", "visualization", "chart", "plot"]
 categories = ["visualization", "graphics"]
 license = "MIT/Apache-2.0"
 readme = "../README.md"
 
 [dependencies]
-deno_core = { version = "0.209", optional = true }
-handlebars = "4.3"
+deno_core = { version = "0.311", optional = true }
+handlebars = { version = "4.3", optional = true }
 image = { version = "0.24", optional = true }
-resvg = { version = "0.35", optional = true }
+resvg = { version = "0.36", optional = true }
 serde = { version = "1.0", features = ["derive"] }
-serde-wasm-bindgen = {version = "0.5", optional = true }
+serde-wasm-bindgen = {version = "0.6", optional = true }
 serde_json = "1.0"
-serde_v8 = { version = "0.120", optional = true }
+serde_v8 = { version = "0.220", optional = true }
+serde_with = "3.11.0"
 wasm-bindgen = { version = "0.2", optional = true }
+
+[dev-dependencies]
+assert-json-diff = "2.0.2"
 
 [dependencies.web-sys]
 version = "0.3.64"
@@ -32,7 +36,9 @@ features = [
 ]
 
 [features]
-ssr = ["deno_core", "image", "resvg", "serde_v8"]
+default = ["html"]
+html = ["handlebars"]
+ssr = ["html", "deno_core", "image", "resvg", "serde_v8"]
 wasm = ["serde-wasm-bindgen", "wasm-bindgen", "web-sys"]
 
 [package.metadata.docs.rs]

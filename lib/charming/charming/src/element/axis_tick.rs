@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::line_style::LineStyle;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AxisTick {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -19,6 +19,12 @@ pub struct AxisTick {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     line_style: Option<LineStyle>,
+}
+
+impl Default for AxisTick {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AxisTick {

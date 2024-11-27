@@ -2,10 +2,10 @@ use serde::Serialize;
 
 use crate::{
     datatype::DataFrame,
-    element::{CoordinateSystem, Emphasis, ItemStyle, Label},
+    element::{CoordinateSystem, Emphasis, ItemStyle, Label, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Heatmap {
     #[serde(rename = "type")]
@@ -59,8 +59,17 @@ pub struct Heatmap {
     #[serde(skip_serializing_if = "Option::is_none")]
     emphasis: Option<Emphasis>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<DataFrame>,
+}
+
+impl Default for Heatmap {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Heatmap {
@@ -83,6 +92,7 @@ impl Heatmap {
             label: None,
             item_style: None,
             emphasis: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -164,6 +174,11 @@ impl Heatmap {
 
     pub fn emphasis(mut self, emphasis: Emphasis) -> Self {
         self.emphasis = Some(emphasis);
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

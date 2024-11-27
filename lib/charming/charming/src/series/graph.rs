@@ -1,12 +1,18 @@
 use serde::{Deserialize, Serialize};
 
-use crate::element::{CoordinateSystem, Label, LabelLayout, LineStyle, ScaleLimit};
+use crate::element::{CoordinateSystem, Label, LabelLayout, LineStyle, ScaleLimit, Tooltip};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphLayoutCircular {
     #[serde(skip_serializing_if = "Option::is_none")]
     rotate_label: Option<bool>,
+}
+
+impl Default for GraphLayoutCircular {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GraphLayoutCircular {
@@ -20,7 +26,7 @@ impl GraphLayoutCircular {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphLayoutForce {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -37,6 +43,12 @@ pub struct GraphLayoutForce {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     friction: Option<f64>,
+}
+
+impl Default for GraphLayoutForce {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GraphLayoutForce {
@@ -76,7 +88,7 @@ impl GraphLayoutForce {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum GraphLayout {
     None,
@@ -95,7 +107,7 @@ impl From<&str> for GraphLayout {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphNodeLabel {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -110,8 +122,15 @@ pub struct GraphNodeLabel {
     #[serde(skip_serializing_if = "Option::is_none")]
     color: Option<String>,
 
+    //TODO: I think this should be f64, would be a breaking change
     #[serde(skip_serializing_if = "Option::is_none")]
     font_size: Option<u64>,
+}
+
+impl Default for GraphNodeLabel {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GraphNodeLabel {
@@ -151,7 +170,7 @@ impl GraphNodeLabel {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphNode {
     pub id: String,
@@ -166,7 +185,7 @@ pub struct GraphNode {
     pub label: Option<GraphNodeLabel>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphLink {
     pub source: String,
@@ -175,13 +194,13 @@ pub struct GraphLink {
     pub value: Option<f64>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphCategory {
     pub name: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GraphData {
     pub nodes: Vec<GraphNode>,
@@ -189,7 +208,7 @@ pub struct GraphData {
     pub categories: Vec<GraphCategory>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Graph {
     #[serde(rename = "type")]
@@ -254,6 +273,18 @@ pub struct Graph {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<GraphNode>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    edge_symbol: Option<(String, String)>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+}
+
+impl Default for Graph {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Graph {
@@ -280,6 +311,8 @@ impl Graph {
             categories: vec![],
             links: vec![],
             data: vec![],
+            edge_symbol: None,
+            tooltip: None,
         }
     }
 
@@ -372,6 +405,16 @@ impl Graph {
         self.data = data.nodes;
         self.links = data.links;
         self.categories = data.categories;
+        self
+    }
+
+    pub fn edge_symbol(mut self, edge_symbol: Option<(String, String)>) -> Self {
+        self.edge_symbol = edge_symbol;
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 }

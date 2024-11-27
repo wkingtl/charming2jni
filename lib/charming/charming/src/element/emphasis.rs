@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::{item_style::ItemStyle, AreaStyle, Label};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum EmphasisFocus {
     None,
@@ -15,7 +15,7 @@ pub enum EmphasisFocus {
     Adjacency,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Emphasis {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -29,6 +29,12 @@ pub struct Emphasis {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     label: Option<Label>,
+}
+
+impl Default for Emphasis {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Emphasis {

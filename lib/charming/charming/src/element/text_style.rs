@@ -1,21 +1,24 @@
 use serde::Serialize;
 
-use super::color::Color;
+use super::{
+    color::Color,
+    font_settings::{FontFamily, FontStyle, FontWeight},
+};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TextStyle {
     #[serde(skip_serializing_if = "Option::is_none")]
     color: Option<Color>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_style: Option<String>,
+    font_style: Option<FontStyle>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_weight: Option<String>,
+    font_weight: Option<FontWeight>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    font_family: Option<String>,
+    font_family: Option<FontFamily>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     font_size: Option<f64>,
@@ -25,6 +28,15 @@ pub struct TextStyle {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     align: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    padding: Option<[f64; 4]>,
+}
+
+impl Default for TextStyle {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl TextStyle {
@@ -37,6 +49,7 @@ impl TextStyle {
             font_size: None,
             line_height: None,
             align: None,
+            padding: None,
         }
     }
 
@@ -45,17 +58,17 @@ impl TextStyle {
         self
     }
 
-    pub fn font_style<S: Into<String>>(mut self, font_style: S) -> Self {
+    pub fn font_style<F: Into<FontStyle>>(mut self, font_style: F) -> Self {
         self.font_style = Some(font_style.into());
         self
     }
 
-    pub fn font_weight<S: Into<String>>(mut self, font_weight: S) -> Self {
+    pub fn font_weight<F: Into<FontWeight>>(mut self, font_weight: F) -> Self {
         self.font_weight = Some(font_weight.into());
         self
     }
 
-    pub fn font_family<S: Into<String>>(mut self, font_family: S) -> Self {
+    pub fn font_family<F: Into<FontFamily>>(mut self, font_family: F) -> Self {
         self.font_family = Some(font_family.into());
         self
     }
@@ -72,6 +85,36 @@ impl TextStyle {
 
     pub fn align<S: Into<String>>(mut self, align: S) -> Self {
         self.align = Some(align.into());
+        self
+    }
+
+    pub fn padding<F: Into<f64> + Copy>(mut self, padding: [F; 4]) -> Self {
+        self.padding = Some([
+            padding[0].into(),
+            padding[1].into(),
+            padding[2].into(),
+            padding[3].into(),
+        ]);
+        self
+    }
+
+    pub fn padding_all<F: Into<f64> + Copy>(mut self, padding: F) -> Self {
+        self.padding = Some([
+            padding.into(),
+            padding.into(),
+            padding.into(),
+            padding.into(),
+        ]);
+        self
+    }
+
+    pub fn padding_pair<F: Into<f64> + Copy>(mut self, padding: [F; 2]) -> Self {
+        self.padding = Some([
+            padding[0].into(),
+            padding[1].into(),
+            padding[0].into(),
+            padding[1].into(),
+        ]);
         self
     }
 }

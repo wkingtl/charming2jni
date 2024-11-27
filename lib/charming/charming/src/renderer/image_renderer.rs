@@ -19,7 +19,7 @@ var chart = echarts.init(null, {{#if theme}}'{{ theme }}'{{else}}null{{/if}}, {
     height: {{ height }}
 });
 
-chart.setOption({ animation: false });
+chart.setOption({ animation: false, progressive: 0 });
 chart.setOption({{{ chart_option }}});
 chart.renderToSVGString();
 "#;
@@ -40,15 +40,13 @@ impl ImageRenderer {
         runtime
             .execute_script(
                 "[runtime.js]",
-                include_str!("../asset/runtime.js").to_string().into(),
+                include_str!("../asset/runtime.js").to_string(),
             )
             .unwrap();
         runtime
             .execute_script(
                 "[echarts.js]",
-                include_str!("../asset/echarts-5.4.2.min.js")
-                    .to_string()
-                    .into(),
+                include_str!("../asset/echarts-5.5.1.min.js").to_string(),
             )
             .unwrap();
 
@@ -89,7 +87,7 @@ impl ImageRenderer {
                 }),
             )
             .expect("Failed to render template");
-        let result = self.js_runtime.execute_script("[anon]", code.into());
+        let result = self.js_runtime.execute_script("[anon]", code);
 
         match result {
             Ok(global) => {
@@ -121,7 +119,7 @@ impl ImageRenderer {
                 }),
             )
             .expect("Failed to render template");
-        let result = self.js_runtime.execute_script("[anon]", code.into());
+        let result = self.js_runtime.execute_script("[anon]", code);
 
         match result {
             Ok(global) => {
@@ -156,6 +154,7 @@ impl ImageRenderer {
         Ok(buf)
     }
 
+    /// Render a chart to a given image format in bytes
     pub fn render_format_by_json(
         &mut self,
         image_format: ImageFormat,
@@ -207,6 +206,7 @@ impl ImageRenderer {
             .map_err(|error| EchartsError::ImageRenderingError(error.to_string()))
     }
 
+    /// Render and save chart as an SVG
     pub fn save_by_json<P: AsRef<std::path::Path>>(
         &mut self,
         chart: String,
@@ -230,6 +230,7 @@ impl ImageRenderer {
             .map_err(|error| EchartsError::ImageRenderingError(error.to_string()))
     }
 
+    /// Render and save chart as the given image format
     pub fn save_format_by_json<P: AsRef<std::path::Path>>(
         &mut self,
         image_format: ImageFormat,

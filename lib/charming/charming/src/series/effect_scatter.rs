@@ -4,31 +4,31 @@ use crate::{
     datatype::{DataFrame, DataPoint},
     element::{
         Color, ColorBy, CoordinateSystem, Emphasis, ItemStyle, Label, LabelLayout, LabelLine,
-        Symbol,
+        Symbol, Tooltip,
     },
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum EffectType {
     Ripple,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowEffectOn {
     Render,
     Emphasis,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum RippleEffectBrushType {
     Fill,
     Stroke,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RippleEffect {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -45,6 +45,12 @@ pub struct RippleEffect {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     brush_type: Option<RippleEffectBrushType>,
+}
+
+impl Default for RippleEffect {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RippleEffect {
@@ -84,7 +90,7 @@ impl RippleEffect {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct EffectScatter {
     #[serde(rename = "type")]
@@ -156,8 +162,17 @@ pub struct EffectScatter {
     #[serde(skip_serializing_if = "Option::is_none")]
     emphasis: Option<Emphasis>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: DataFrame,
+}
+
+impl Default for EffectScatter {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl EffectScatter {
@@ -186,6 +201,7 @@ impl EffectScatter {
             label_layout: None,
             item_style: None,
             emphasis: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -297,6 +313,11 @@ impl EffectScatter {
 
     pub fn emphasis<E: Into<Emphasis>>(mut self, emphasis: E) -> Self {
         self.emphasis = Some(emphasis.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

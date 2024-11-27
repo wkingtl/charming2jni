@@ -1,3 +1,5 @@
+#![allow(clippy::approx_constant)]
+
 use charming::{
     component::{
         Axis, DataZoom, DataZoomType, Feature, Grid, Legend, Restore, SaveAsImage, Title, Toolbox,
@@ -13,8 +15,8 @@ use charming::{
 
 pub fn chart() -> Chart {
     let time_data = TIME.iter().map(|&x| x.to_string()).collect::<Vec<_>>();
-    let flow_data = FLOW_DATA.iter().map(|&x| x).collect::<Vec<_>>();
-    let rainfall_data = RAINFALL_DATA.iter().map(|&x| x).collect::<Vec<_>>();
+    let flow_data = FLOW_DATA.to_vec();
+    let rainfall_data = RAINFALL_DATA.to_vec();
 
     Chart::new()
         .title(
@@ -101,7 +103,7 @@ pub fn chart() -> Chart {
         )
 }
 
-const TIME: [&str; 3079] = [
+static TIME: [&str; 3079] = [
     "2009/6/12\n2:00",
     "2009/6/12\n3:00",
     "2009/6/12\n4:00",
@@ -3183,7 +3185,7 @@ const TIME: [&str; 3079] = [
     "2009/10/18\n8:00",
 ];
 
-const FLOW_DATA: [f64; 3079] = [
+static FLOW_DATA: [f64; 3079] = [
     0.97, 0.96, 0.96, 0.95, 0.95, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94,
     0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94,
     0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94, 0.94,
@@ -3385,7 +3387,7 @@ const FLOW_DATA: [f64; 3079] = [
     0.45, 0.45, 0.45,
 ];
 
-const RAINFALL_DATA: [f64; 3079] = [
+static RAINFALL_DATA: [f64; 3079] = [
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0.005, 0.017, 0.017, 0.017, 0.017, 0.011, 0., 0., 0., 0.,
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,

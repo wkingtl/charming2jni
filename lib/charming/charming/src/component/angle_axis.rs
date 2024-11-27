@@ -6,7 +6,7 @@ use crate::element::{
 };
 
 /// The angle axis in Polar Coordinate.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AngleAxis {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -23,6 +23,9 @@ pub struct AngleAxis {
     /// Starting angle of axis, default to 90.
     #[serde(skip_serializing_if = "Option::is_none")]
     start_angle: Option<f64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    end_angle: Option<f64>,
 
     /// Whether the direction of axis is clockwise, default to true.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -66,6 +69,9 @@ pub struct AngleAxis {
     log_base: Option<f64>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    start_value: Option<f64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     silent: Option<bool>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -99,6 +105,12 @@ pub struct AngleAxis {
     data: Vec<String>,
 }
 
+impl Default for AngleAxis {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AngleAxis {
     pub fn new() -> Self {
         Self {
@@ -106,6 +118,7 @@ impl AngleAxis {
             id: None,
             polar_index: None,
             start_angle: None,
+            end_angle: None,
             clockwise: None,
             type_: None,
             zlevel: None,
@@ -118,6 +131,7 @@ impl AngleAxis {
             max_interval: None,
             interval: None,
             log_base: None,
+            start_value: None,
             silent: None,
             trigger_event: None,
             axis_line: None,
@@ -149,6 +163,11 @@ impl AngleAxis {
 
     pub fn start_angle<F: Into<f64>>(mut self, start_angle: F) -> Self {
         self.start_angle = Some(start_angle.into());
+        self
+    }
+
+    pub fn end_angle<F: Into<f64>>(mut self, end_angle: F) -> Self {
+        self.end_angle = Some(end_angle.into());
         self
     }
 
@@ -209,6 +228,11 @@ impl AngleAxis {
 
     pub fn log_base<F: Into<f64>>(mut self, log_base: F) -> Self {
         self.log_base = Some(log_base.into());
+        self
+    }
+
+    pub fn start_value<F: Into<f64>>(mut self, start_value: F) -> Self {
+        self.start_value = Some(start_value.into());
         self
     }
 

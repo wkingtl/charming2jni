@@ -3,12 +3,12 @@ use serde::Serialize;
 use crate::{
     datatype::{DataFrame, DataPoint},
     element::{
-        AreaStyle, CoordinateSystem, DimensionEncode, Emphasis, ItemStyle, Label, LineStyle,
-        MarkArea, MarkLine, MarkPoint, Symbol,
+        smoothness::Smoothness, AreaStyle, CoordinateSystem, DimensionEncode, Emphasis, ItemStyle,
+        Label, LineStyle, MarkArea, MarkLine, MarkPoint, Symbol, SymbolSize, Tooltip,
     },
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Line {
     #[serde(rename = "type")]
@@ -27,7 +27,7 @@ pub struct Line {
     symbol: Option<Symbol>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    symbol_size: Option<f64>,
+    symbol_size: Option<SymbolSize>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     show_symbol: Option<bool>,
@@ -51,7 +51,10 @@ pub struct Line {
     emphasis: Option<Emphasis>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    smooth: Option<f64>,
+    smooth: Option<Smoothness>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    connect_nulls: Option<bool>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     mark_point: Option<MarkPoint>,
@@ -74,8 +77,17 @@ pub struct Line {
     #[serde(skip_serializing_if = "Option::is_none")]
     y_axis_index: Option<f64>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: DataFrame,
+}
+
+impl Default for Line {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Line {
@@ -95,6 +107,7 @@ impl Line {
             item_style: None,
             emphasis: None,
             smooth: None,
+            connect_nulls: None,
             mark_point: None,
             mark_line: None,
             mark_area: None,
@@ -102,6 +115,7 @@ impl Line {
             encode: None,
             x_axis_index: None,
             y_axis_index: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -127,7 +141,7 @@ impl Line {
         self
     }
 
-    pub fn symbol_size<F: Into<f64>>(mut self, symbol_size: F) -> Self {
+    pub fn symbol_size<F: Into<SymbolSize>>(mut self, symbol_size: F) -> Self {
         self.symbol_size = Some(symbol_size.into());
         self
     }
@@ -168,8 +182,13 @@ impl Line {
     }
 
     /// Smoothness.
-    pub fn smooth<F: Into<f64>>(mut self, smooth: F) -> Self {
+    pub fn smooth<S: Into<Smoothness>>(mut self, smooth: S) -> Self {
         self.smooth = Some(smooth.into());
+        self
+    }
+
+    pub fn connect_nulls(mut self, connect_nulls: bool) -> Self {
+        self.connect_nulls = Some(connect_nulls);
         self
     }
 
@@ -205,6 +224,11 @@ impl Line {
 
     pub fn y_axis_index<F: Into<f64>>(mut self, y_axis_index: F) -> Self {
         self.y_axis_index = Some(y_axis_index.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

@@ -5,7 +5,7 @@ use crate::{
     element::{Label, LineStyle},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum AxisPointerType {
     Line,
@@ -14,7 +14,7 @@ pub enum AxisPointerType {
     None,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum AxisPointerAxis {
     X,
@@ -23,7 +23,7 @@ pub enum AxisPointerAxis {
     Angle,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AxisPointerLink {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -37,6 +37,12 @@ pub struct AxisPointerLink {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     y_axis_name: Option<String>,
+}
+
+impl Default for AxisPointerLink {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AxisPointerLink {
@@ -72,7 +78,7 @@ impl AxisPointerLink {
 
 /// Axis Pointer is a tool for displaying reference line and axis value under
 /// mouse pointer.
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AxisPointer {
     /// Component ID.
@@ -111,6 +117,12 @@ pub struct AxisPointer {
     /// Axis pointer can be linked to each other.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     link: Vec<AxisPointerLink>,
+}
+
+impl Default for AxisPointer {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AxisPointer {

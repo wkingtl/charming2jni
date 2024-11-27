@@ -2,10 +2,10 @@ use serde::Serialize;
 
 use crate::{
     datatype::{DataFrame, DataPoint},
-    element::{ColorBy, CoordinateSystem},
+    element::{ColorBy, CoordinateSystem, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Candlestick {
     #[serde(rename = "type")]
@@ -26,8 +26,17 @@ pub struct Candlestick {
     #[serde(skip_serializing_if = "Option::is_none")]
     legend_hover_link: Option<bool>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: DataFrame,
+}
+
+impl Default for Candlestick {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Candlestick {
@@ -40,6 +49,7 @@ impl Candlestick {
             color_by: None,
             legend_hover_link: None,
             data: vec![],
+            tooltip: None,
         }
     }
 
@@ -65,6 +75,11 @@ impl Candlestick {
 
     pub fn legend_hover_link(mut self, legend_hover_link: bool) -> Self {
         self.legend_hover_link = Some(legend_hover_link);
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

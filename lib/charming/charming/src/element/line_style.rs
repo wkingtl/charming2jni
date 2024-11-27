@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::color::Color;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum LineStyleType {
     Solid,
@@ -10,7 +10,7 @@ pub enum LineStyleType {
     Dotted,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct LineStyle {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -28,6 +28,12 @@ pub struct LineStyle {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     curveness: Option<f64>,
+}
+
+impl Default for LineStyle {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl LineStyle {

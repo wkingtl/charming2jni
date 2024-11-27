@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::element::{Emphasis, ItemStyle, Label, Sort};
+use crate::element::{Emphasis, ItemStyle, Label, Sort, Tooltip};
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SunburstLevel {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -16,6 +16,12 @@ pub struct SunburstLevel {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     label: Option<Label>,
+}
+
+impl Default for SunburstLevel {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl SunburstLevel {
@@ -49,7 +55,7 @@ impl SunburstLevel {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SunburstNode {
     name: String,
@@ -111,7 +117,7 @@ impl From<(&str, f64, &str)> for SunburstNode {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Sunburst {
     #[serde(rename = "type")]
@@ -144,8 +150,17 @@ pub struct Sunburst {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     levels: Vec<SunburstLevel>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: Vec<SunburstNode>,
+}
+
+impl Default for Sunburst {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Sunburst {
@@ -161,6 +176,7 @@ impl Sunburst {
             emphasis: None,
             sort: None,
             levels: vec![],
+            tooltip: None,
             data: vec![],
         }
     }
@@ -207,6 +223,11 @@ impl Sunburst {
 
     pub fn levels(mut self, levels: Vec<SunburstLevel>) -> Self {
         self.levels = levels;
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

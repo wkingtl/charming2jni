@@ -2,10 +2,10 @@ use serde::Serialize;
 
 use crate::{
     datatype::{CompositeValue, DataFrame, DataPoint},
-    element::{ColorBy, Emphasis, ItemStyle, Label, LabelLine, Orient, Sort},
+    element::{ColorBy, Emphasis, ItemStyle, Label, LabelLine, Orient, Sort, Tooltip},
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone, Copy)]
 #[serde(rename_all = "snake_case")]
 pub enum Align {
     Left,
@@ -13,7 +13,7 @@ pub enum Align {
     Center,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Funnel {
     #[serde(rename = "type")]
@@ -85,8 +85,17 @@ pub struct Funnel {
     #[serde(skip_serializing_if = "Option::is_none")]
     emphasis: Option<Emphasis>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tooltip: Option<Tooltip>,
+
     #[serde(skip_serializing_if = "Vec::is_empty")]
     data: DataFrame,
+}
+
+impl Default for Funnel {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Funnel {
@@ -115,6 +124,7 @@ impl Funnel {
             label_line: None,
             item_style: None,
             emphasis: None,
+            tooltip: None,
             data: vec![],
         }
     }
@@ -226,6 +236,11 @@ impl Funnel {
 
     pub fn emphasis<E: Into<Emphasis>>(mut self, emphasis: E) -> Self {
         self.emphasis = Some(emphasis.into());
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: Tooltip) -> Self {
+        self.tooltip = Some(tooltip);
         self
     }
 

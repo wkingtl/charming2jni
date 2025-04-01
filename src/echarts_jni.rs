@@ -6,7 +6,7 @@ use jni::objects::*;
 use jni::sys::jint;
 
 /// 跟进路径和原始json渲染图表
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Java_top_magicpotato_Echarts_save(mut env: JNIEnv, _class: JClass, width: jint, height: jint, path: JString, data: JString) {
     let data: String = env.get_string(&data).expect("Couldn't get data string!").into();
     let path: String = env.get_string(&path).expect("Couldn't get path string!").into();
@@ -21,7 +21,7 @@ pub unsafe extern "C" fn Java_top_magicpotato_Echarts_save(mut env: JNIEnv, _cla
 }
 
 /// 跟进json渲染数据  返回byte数组
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Java_top_magicpotato_Echarts_render<'local>(mut env: JNIEnv<'local>, _class: JClass, width: jint, height: jint, extension: JString<'local>, data: JString<'local>) -> JByteArray<'local> {
     let data: String = env.get_string(&data).expect("Couldn't get data string!").into();
     let extension: String = env.get_string(&extension).expect("Couldn't get path string!").into();

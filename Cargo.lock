@@ -267,6 +267,7 @@ version = "0.0.1"
 dependencies = [
  "charming",
  "jni",
+ "thiserror 2.0.12",
 ]
 
 [[package]]
